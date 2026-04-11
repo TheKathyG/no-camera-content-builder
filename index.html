@@ -3,51 +3,216 @@
 <head>
   <title>No-Camera Content Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
   <style>
-    body { font-family: Arial; padding:20px; background:#f5f0ff; }
-    h1 { color:#6b46c1; }
-    button { padding:10px 15px; background:#6b46c1; color:white; border:none; border-radius:5px; }
-    input, select { width:100%; padding:10px; margin:10px 0; }
-    .box { background:white; padding:15px; border-radius:10px; margin-top:15px; }
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: #f5f0ff;
+      color: #333;
+    }
+
+    .header {
+      background: #6b46c1;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #6b46c1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .box {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    h3 {
+      margin-top: 0;
+      color: #6b46c1;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 20px;
+      opacity: 0.6;
+    }
   </style>
 </head>
 
 <body>
 
-<h1>No-Camera Content Builder</h1>
+  <div class="header">
+    <h1>No-Camera Content Builder</h1>
+    <p>Show up consistently—without showing your face</p>
+  </div>
 
-<input id="business" placeholder="Your business type">
-<input id="offer" placeholder="What are you promoting?">
+  <div class="container">
 
-<select id="goal">
-  <option>Get clients</option>
-  <option>Grow audience</option>
-  <option>Stay consistent</option>
-</select>
+    <input id="business" placeholder="Your business type (e.g. stylist, realtor)">
+    <input id="offer" placeholder="What are you promoting?">
 
-<button onclick="generate()">Generate Ideas</button>
+    <select id="goal">
+      <option>Get clients</option>
+      <option>Grow audience</option>
+      <option>Stay consistent</option>
+    </select>
 
-<div id="results"></div>
+    <button onclick="generate()">Generate Ideas</button>
+
+    <div id="results"></div>
+
+    <div class="footer">
+      Purple Essence Digital
+    </div>
+
+  </div>
 
 <script>
 function generate() {
-  const business = document.getElementById("business").value;
-  const offer = document.getElementById("offer").value;
+  const business = document.getElementById("business").value.toLowerCase() || "your business";
+  const offer = document.getElementById("offer").value || "your offer";
+  const goal = document.getElementById("goal").value;
+
+  let ideas = [];
+  let captions = [];
+
+  // Industry-aware tweaks
+  let niche = "general";
+
+  if (business.includes("realtor") || business.includes("real estate")) niche = "real estate";
+  if (business.includes("stylist") || business.includes("salon")) niche = "beauty";
+  if (business.includes("musician") || business.includes("dj") || business.includes("band")) niche = "music";
+
+  // Base logic
+  if (goal === "Get clients") {
+    ideas = [
+      `Show a transformation related to ${offer}`,
+      `Explain your process for ${offer}`,
+      `Call out a common mistake in ${business}`,
+      `Break down why people struggle with ${offer}`
+    ];
+
+    captions = [
+      `If you're trying to ${offer}, this is where most people go wrong...`,
+      `Here’s how I help people with ${offer} without overcomplicating it.`,
+      `If you’ve been stuck with ${offer}, try this instead.`,
+      `Most people don’t realize this about ${offer}...`
+    ];
+  }
+
+  if (goal === "Grow audience") {
+    ideas = [
+      `Share a quick tip about ${business}`,
+      `Bust a myth in your industry`,
+      `Things I wish I knew about ${business}`,
+      `Answer a common question you get`
+    ];
+
+    captions = [
+      `Most people think this about ${business}… but it’s not true.`,
+      `Here’s something I wish more people understood about ${business}.`,
+      `If you're new to ${business}, start here.`,
+      `This might change how you think about ${business}...`
+    ];
+  }
+
+  if (goal === "Stay consistent") {
+    ideas = [
+      `Behind-the-scenes of your ${offer}`,
+      `Share what you're working on`,
+      `Re-share something important`,
+      `Quick tip without overthinking it`
+    ];
+
+    captions = [
+      `Keeping it simple today—here’s what I’m working on.`,
+      `Not everything needs to be complicated.`,
+      `Showing up today without overthinking it.`,
+      `Consistency over perfection.`
+    ];
+  }
+
+  // Niche boost (adds personality)
+  if (niche === "beauty") {
+    ideas.push("Show a client before/after");
+    captions.push("Small changes make a big difference.");
+  }
+
+  if (niche === "real estate") {
+    ideas.push("Talk about what buyers are getting wrong right now");
+    captions.push("What you think you need vs what actually matters.");
+  }
+
+  if (niche === "music") {
+    ideas.push("Share a clip of your setup or process");
+    captions.push("This is what goes into what you hear.");
+  }
+
+  // shuffle
+  ideas.sort(() => Math.random() - 0.5);
+  captions.sort(() => Math.random() - 0.5);
+
+  let ideasHTML = ideas.slice(0,4).map(i => `<p>• ${i}</p>`).join("");
+
+  let captionsHTML = captions.slice(0,3).map((c, index) => `
+    <div style="margin-bottom:10px;">
+      <p id="caption${index}">"${c}"</p>
+      <button onclick="copyText('caption${index}')">Copy</button>
+    </div>
+  `).join("");
 
   document.getElementById("results").innerHTML = `
     <div class="box">
-      <h3>Ideas</h3>
-      <p>• Share a tip related to ${business}</p>
-      <p>• Post a client result or transformation</p>
-      <p>• Show behind-the-scenes of your ${offer}</p>
+      <h3>Content Ideas</h3>
+      ${ideasHTML}
     </div>
 
     <div class="box">
-      <h3>Captions</h3>
-      <p>"If you're struggling with ${offer}, this will help..."</p>
-      <p>"Most people overcomplicate ${business}. Here's the truth..."</p>
+      <h3>Caption Starters</h3>
+      ${captionsHTML}
     </div>
+
+    <div class="box">
+      <h3>Keep It Simple</h3>
+      <p>You don’t need to be on camera.</p>
+      <p>Use text posts, simple visuals, or behind-the-scenes.</p>
+    </div>
+
+    <button onclick="generate()">🔁 Regenerate Ideas</button>
   `;
+}
+
+function copyText(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied!");
 }
 </script>
 
