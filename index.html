@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>No-Camera Content Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; padding:20px; background:#f5f0ff; }
+    h1 { color:#6b46c1; }
+    button { padding:10px 15px; background:#6b46c1; color:white; border:none; border-radius:5px; }
+    input, select { width:100%; padding:10px; margin:10px 0; }
+    .box { background:white; padding:15px; border-radius:10px; margin-top:15px; }
+  </style>
+</head>
+
+<body>
+
+<h1>No-Camera Content Builder</h1>
+
+<input id="business" placeholder="Your business type">
+<input id="offer" placeholder="What are you promoting?">
+
+<select id="goal">
+  <option>Get clients</option>
+  <option>Grow audience</option>
+  <option>Stay consistent</option>
+</select>
+
+<button onclick="generate()">Generate Ideas</button>
+
+<div id="results"></div>
+
+<script>
+function generate() {
+  const business = document.getElementById("business").value;
+  const offer = document.getElementById("offer").value;
+
+  document.getElementById("results").innerHTML = `
+    <div class="box">
+      <h3>Ideas</h3>
+      <p>• Share a tip related to ${business}</p>
+      <p>• Post a client result or transformation</p>
+      <p>• Show behind-the-scenes of your ${offer}</p>
+    </div>
+
+    <div class="box">
+      <h3>Captions</h3>
+      <p>"If you're struggling with ${offer}, this will help..."</p>
+      <p>"Most people overcomplicate ${business}. Here's the truth..."</p>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
